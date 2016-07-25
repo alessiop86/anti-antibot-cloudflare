@@ -10,7 +10,7 @@ import java.io.IOException;
 public class TestHttp {
 
     final static String site = "https://www.pokevision.com";
-    
+
     public static void main(String[] args) throws Exception {
         AntiAntiBotCloudFlare main = new AntiAntiBotCloudFlare(new OkHttpHttpClientAdapter());
         String output = main.getUrl(site);
