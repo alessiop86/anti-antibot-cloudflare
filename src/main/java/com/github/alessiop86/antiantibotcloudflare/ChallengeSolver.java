@@ -11,6 +11,11 @@ public class ChallengeSolver {
 
     private static final int REQUIRED_DELAY = 000;//TODO 5000
     private Parser parser;
+    private JavascriptEngine javascriptEngine;
+
+    public ChallengeSolver(boolean isAndroid) {
+        javascriptEngine = new JavascriptEngine(isAndroid);
+    }
 
     public String solve(HttpResponseAdapter firstReturnedPage) throws AntiAntibotException {
         try {
@@ -37,4 +42,6 @@ public class ChallengeSolver {
     private String getSubmitUrl(String baseUrl) {
         return baseUrl + "cdn-cgi/l/chk_jschl";
     }
+
+
 }
