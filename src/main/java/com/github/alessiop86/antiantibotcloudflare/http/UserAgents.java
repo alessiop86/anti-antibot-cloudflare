@@ -17,7 +17,7 @@ public final class UserAgents {
 
 
     public static final String getRandom() {
-        return USER_AGENTS[random.nextInt(6)];
+        return USER_AGENTS[random.nextInt(5)];
     }
 
 }

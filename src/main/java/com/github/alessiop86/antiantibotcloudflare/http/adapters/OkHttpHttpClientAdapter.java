@@ -24,7 +24,7 @@ public class OkHttpHttpClientAdapter implements HttpClientAdapter {
                     .addHeader(USER_AGENT_HEADER, UserAgents.getRandom())
                     .build();
             Response response = client.newCall(request).execute();
-            return new HttpResponseAdapter(isChallenge(response), response.body().string());
+            return new HttpResponseAdapter(isChallenge(response), response.body().string(), response.request().url().toString());
         }
         catch(IOException e) {
             throw new HttpException(e);

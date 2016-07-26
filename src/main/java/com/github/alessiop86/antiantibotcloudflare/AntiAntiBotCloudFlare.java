@@ -10,6 +10,7 @@ public class AntiAntiBotCloudFlare {
     private final HttpClientAdapter httpClient;
     private final ChallengeSolver challengeSolver = new ChallengeSolver();
 
+
     public AntiAntiBotCloudFlare(HttpClientAdapter httpClient) {
         this.httpClient = httpClient;
     }
@@ -21,14 +22,14 @@ public class AntiAntiBotCloudFlare {
                 return  firstReturnedPage.getContent();
             }
             else {
-                return proceedWithAntiAntibot(firstReturnedPage.getContent());
+                return proceedWithAntiAntibot(firstReturnedPage);
             }
         } catch (HttpException e) {
             throw new AntiAntibotException("Operation failed",e);
         }
     }
 
-    private String proceedWithAntiAntibot(String firstReturnedPage) {
+    private String proceedWithAntiAntibot(HttpResponseAdapter firstReturnedPage) throws AntiAntibotException {
         String challengeResult = challengeSolver.solve(firstReturnedPage);
         return null;
     }

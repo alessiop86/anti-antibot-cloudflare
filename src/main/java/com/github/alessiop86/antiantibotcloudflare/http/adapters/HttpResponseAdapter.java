@@ -5,13 +5,17 @@ import java.util.HashMap;
 public class HttpResponseAdapter {
 
 //    private HashMap<String,String> headers;
-    private boolean challenge;
-    private String content;
+    private final boolean challenge;
+    private final String content;
+    private final String requestUrl;
 
-    public HttpResponseAdapter(boolean challenge, String content) {
+    public HttpResponseAdapter(boolean challenge, String content, String requestUrl) {
         this.challenge = challenge;
         this.content = content;
+        this.requestUrl = requestUrl;
     }
+
+
 //    public HttpResponseAdapter(HashMap<String, String> headers, String content) {
 //        this.headers = headers;
 //        this.content = content;
@@ -31,5 +35,9 @@ public class HttpResponseAdapter {
 
     public String getContent() {
         return content;
+    }
+
+    public String getRequestUrl() {
+        return requestUrl;
     }
 }
