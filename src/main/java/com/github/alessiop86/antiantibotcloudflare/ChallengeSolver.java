@@ -9,39 +9,16 @@ import java.io.IOException;
 
 public class ChallengeSolver {
 
-    private static final int REQUIRED_DELAY = 000;//TODO 5000
-    private Parser parser;
     private JavascriptEngine javascriptEngine;
 
-    public ChallengeSolver(boolean isAndroid) {
-        javascriptEngine = new JavascriptEngine(isAndroid);
+    public ChallengeSolver(JavascriptEngine javascriptEngine) {
+        javascriptEngine = javascriptEngine;
     }
 
-    public String solve(HttpResponseAdapter firstReturnedPage) throws AntiAntibotException {
-        try {
-            requiredDelay();
-            parser = new Parser(firstReturnedPage.getContent());
-
-            String submitUrl = getSubmitUrl(firstReturnedPage.getRequestUrl());
-            System.out.println(submitUrl);
-            return null;
-        }
-        catch(ParseException e) {
-            throw new AntiAntibotException(e.getMessage(),e);
-        }
+    public Integer solve(String challenge, HttpResponseAdapter firstReturnedPage) throws AntiAntibotException {
+        Integer jsChallengeResult = javascriptEngine.solveJavascript(challenge);
+        Integer domainNameLength = firstReturnedPage.getDomainName().length();
+        return jsChallengeResult + domainNameLength;
     }
-
-    private void requiredDelay() throws AntiAntibotException {
-        try {
-            Thread.sleep(REQUIRED_DELAY);
-        }
-        catch (InterruptedException e) {
-            throw new AntiAntibotException(e);
-        }
-    }
-    private String getSubmitUrl(String baseUrl) {
-        return baseUrl + "cdn-cgi/l/chk_jschl";
-    }
-
 
 }

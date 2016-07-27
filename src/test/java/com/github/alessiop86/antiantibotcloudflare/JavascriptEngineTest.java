@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 public class JavascriptEngineTest {
 
+    //boolean JavascriptEngine param does not influence the result, is just for performance & compatibility
     private JavascriptEngine engine = new JavascriptEngine(true);
 
     @Test

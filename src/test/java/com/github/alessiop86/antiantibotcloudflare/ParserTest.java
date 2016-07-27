@@ -39,8 +39,8 @@ public class ParserTest {
 
     @Test
     public void getJsChallenge() {
-        //TODO: can I remote empty spaces???
-        assertEquals("var s,t,o,p,b,r,e,a,k,i,n,g,f, RIAxDXb={\"dJvhbZlZfYj\":!+[]+!![]+!![]+!![]+!![]+!![]+!![]};        ;RIAxDXb.dJvhbZlZfYj*=+((!+[]+!![]+[])+(!+[]+!![]+!![]));RIAxDXb.dJvhbZlZfYj*=+((!+[]+!![]+!![]+[])+(!+[]+!![]+!![]));RIAxDXb.dJvhbZlZfYj-=!+[]+!![]+!![]+!![]+!![];RIAxDXb.dJvhbZlZfYj+=+((!+[]+!![]+[])+(!+[]+!![]+!![]+!![]));parseInt(RIAxDXb.dJvhbZlZfYj, 10)",
+        //TODO: can I remove empty spaces???
+        assertEquals("var s,t,o,p,b,r,e,a,k,i,n,g,f, deXyqUX={\"QLH\":+((+!![]+[])+(!+[]+!![]+!![]+!![]+!![]+!![]))};        ;deXyqUX.QLH*=+((+!![]+[])+(!+[]+!![]+!![]+!![]+!![]+!![]));deXyqUX.QLH-=+((!+[]+!![]+!![]+!![]+[])+(!+[]+!![]+!![]+!![]+!![]+!![]));deXyqUX.QLH*=!+[]+!![]+!![];deXyqUX.QLH*=+((+!![]+[])+(!+[]+!![]+!![]+!![]+!![]));deXyqUX.QLH+=+((!+[]+!![]+!![]+!![]+!![]+[])+(+[]));deXyqUX.QLH+=+((!+[]+!![]+!![]+!![]+[])+(+!![]));deXyqUX.QLH*=!+[]+!![]+!![];deXyqUX.QLH*=+((!+[]+!![]+[])+(!+[]+!![]+!![]+!![]));parseInt(deXyqUX.QLH, 10)",
                 parser.getJsChallenge());
     }
 

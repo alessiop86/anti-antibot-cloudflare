@@ -6,7 +6,7 @@ import org.mozilla.javascript.Scriptable;
 
 public class JavascriptEngine {
 
-    boolean android;
+    private final boolean android;
 
     public JavascriptEngine(boolean android) {
         this.android = android;
@@ -24,7 +24,7 @@ public class JavascriptEngine {
             return (int) Float.parseFloat(javascriptResult.toString());
         }
         catch(Exception e) {
-            throw new AntiAntibotException("Error solving the javascript challenge",e);
+            throw new AntiAntibotException("Error solving the javascript challenge", e);
         }
         finally {
             Context.exit();
