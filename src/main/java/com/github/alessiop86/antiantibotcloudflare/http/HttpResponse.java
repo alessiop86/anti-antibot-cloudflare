@@ -1,4 +1,4 @@
-package com.github.alessiop86.antiantibotcloudflare.http.adapters;
+package com.github.alessiop86.antiantibotcloudflare.http;
 
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
 
@@ -6,21 +6,21 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
-public class HttpResponseAdapter {
+public class HttpResponse {
 
 //    private HashMap<String,String> headers;
     private final boolean challenge;
     private final String content;
     private final String requestUrl;
 
-    public HttpResponseAdapter(boolean challenge, String content, String requestUrl) {
+    public HttpResponse(boolean challenge, String content, String requestUrl) {
         this.challenge = challenge;
         this.content = content;
         this.requestUrl = requestUrl;
     }
 
 
-//    public HttpResponseAdapter(HashMap<String, String> headers, String content) {
+//    public HttpResponse(HashMap<String, String> headers, String content) {
 //        this.headers = headers;
 //        this.content = content;
 //    }

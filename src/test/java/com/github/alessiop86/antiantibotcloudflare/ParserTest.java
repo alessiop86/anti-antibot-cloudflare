@@ -39,9 +39,8 @@ public class ParserTest {
 
     @Test
     public void getJsChallenge() {
-        //TODO: can I remove empty spaces???
         assertEquals("var s,t,o,p,b,r,e,a,k,i,n,g,f, deXyqUX={\"QLH\":+((+!![]+[])+(!+[]+!![]+!![]+!![]+!![]+!![]))};        ;deXyqUX.QLH*=+((+!![]+[])+(!+[]+!![]+!![]+!![]+!![]+!![]));deXyqUX.QLH-=+((!+[]+!![]+!![]+!![]+[])+(!+[]+!![]+!![]+!![]+!![]+!![]));deXyqUX.QLH*=!+[]+!![]+!![];deXyqUX.QLH*=+((+!![]+[])+(!+[]+!![]+!![]+!![]+!![]));deXyqUX.QLH+=+((!+[]+!![]+!![]+!![]+!![]+[])+(+[]));deXyqUX.QLH+=+((!+[]+!![]+!![]+!![]+[])+(+!![]));deXyqUX.QLH*=!+[]+!![]+!![];deXyqUX.QLH*=+((!+[]+!![]+[])+(!+[]+!![]+!![]+!![]));parseInt(deXyqUX.QLH, 10)",
-                parser.getJsChallenge());
+                parser.getParsedProtectionResponse().getJsChallenge());
     }
 
 }

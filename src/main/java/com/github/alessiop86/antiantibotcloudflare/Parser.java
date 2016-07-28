@@ -16,20 +16,10 @@ public class Parser {
     private static final String CHALLENGE_FORM_SELECTOR = "#challenge-form";
     private static final String NAME_ATTRIBUTE = "name";
     private static final String VALUE_ATTRIBUTE = "value";
-    private static final String INPUT_FIELD_1 = "pass";
-    private static final String INPUT_FIELD_2 = "jschl_vc";
+    public static final String INPUT_FIELD_1 = "pass";
+    public static final String INPUT_FIELD_2 = "jschl_vc";
 
-    private final String field1;
-    private final String field2;
-    private final String jsChallenge;
-
-    public String getField2() {
-        return field2;
-    }
-
-    public String getField1() {
-        return field1;
-    }
+    private final ParsedProtectionResponse parseResult;
 
 
     public Parser(String document) throws ParseException {
@@ -41,10 +31,11 @@ public class Parser {
                 throw new ParseException("The challenge form format has changed. New format:" + form.html());
             }
 
-            field1 = elementsMatchingField1.attr(VALUE_ATTRIBUTE);
-            field2 = elementsMatchingField2.attr(VALUE_ATTRIBUTE);
+            String field1 = elementsMatchingField1.attr(VALUE_ATTRIBUTE);
+            String field2 = elementsMatchingField2.attr(VALUE_ATTRIBUTE);
+            String jsChallenge = extractJsChallenge(document);
 
-            jsChallenge = extractJsChallenge(document);
+            parseResult = new ParsedProtectionResponse(field1,field2,jsChallenge);
         }
         catch(ParseException e) {
             throw e;
@@ -70,7 +61,7 @@ public class Parser {
         return forms.get(0);
     }
 
-    public String getJsChallenge() {
-        return jsChallenge;
+    public ParsedProtectionResponse getParsedProtectionResponse() {
+        return parseResult;
     }
 }

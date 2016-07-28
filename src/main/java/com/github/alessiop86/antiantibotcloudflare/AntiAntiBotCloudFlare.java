@@ -3,7 +3,8 @@ package com.github.alessiop86.antiantibotcloudflare;
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
 import com.github.alessiop86.antiantibotcloudflare.exceptions.ParseException;
 import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpResponseAdapter;
+import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
+import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.adapters.OkHttpHttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 
@@ -34,7 +35,7 @@ public class AntiAntiBotCloudFlare {
 
     public String getUrl(String url) throws AntiAntibotException {
         try {
-            HttpResponseAdapter firstReturnedPage = httpClient.getUrl(url);
+            HttpResponse firstReturnedPage = httpClient.getUrl(url);
             if (!firstReturnedPage.isChallenge()) {
                 return firstReturnedPage.getContent();
             } else {
@@ -45,22 +46,36 @@ public class AntiAntiBotCloudFlare {
         }
     }
 
-    private String proceedWithAntiAntibot(HttpResponseAdapter firstReturnedPage) throws AntiAntibotException {
-        String challenge = extractChallenge(firstReturnedPage.getContent());
-        Integer challengeResult = challengeSolver.solve(challenge, firstReturnedPage);
-        requiredDelay();
-        return executeCallWithChallengeResult(challengeResult,firstReturnedPage);
+    private String proceedWithAntiAntibot(HttpResponse firstReturnedPage) throws AntiAntibotException {
+        long beginMillis = System.currentTimeMillis();
+        ParsedProtectionResponse parsedResponse = parseResponse(firstReturnedPage.getContent());
+        Integer challengeResult = challengeSolver.solve(parsedResponse.getJsChallenge(), firstReturnedPage);
+        String requestUrl = firstReturnedPage.getRequestUrl();
+        String submitUrl = buildSubmitUrl(requestUrl);
+        HttpRequest request = HttpRequest.Builder.withUrl(submitUrl)
+                .addHeader("Referer",requestUrl)
+                .addParam(Parser.INPUT_FIELD_1,parsedResponse.getField1())
+                .addParam(Parser.INPUT_FIELD_2,parsedResponse.getField2())
+                .addParam("jschl_answer", "" + challengeResult)
+                .build();
+        requiredDelay(beginMillis);
+        return executeFinalHttpRequest(request);
     }
 
-    private String executeCallWithChallengeResult(Integer challengeResult, HttpResponseAdapter firstReturnedPage) {
-        String submitUrl = getSubmitUrl(firstReturnedPage.getRequestUrl());
-        return null;
-    }
-
-    private String extractChallenge(String httpResponseBody) throws AntiAntibotException {
+    private String executeFinalHttpRequest(HttpRequest request) throws AntiAntibotException {
         try {
-            Parser p = new Parser(httpResponseBody);
-            return p.getJsChallenge();
+            HttpResponse desiredPage = httpClient.executeRequest(request);
+            return desiredPage.getContent();
+        } catch (HttpException e) {
+            throw new AntiAntibotException("Error executing the second Http call",e);
+        }
+    }
+
+
+    private ParsedProtectionResponse parseResponse(String httpResponseBody) throws AntiAntibotException {
+        try {
+            Parser parser = new Parser(httpResponseBody);
+            return parser.getParsedProtectionResponse();
         } catch (ParseException e) {
             throw new AntiAntibotException("Unable to parse Cloudflare anti-bots page. " +
                     "If the anti-bots protection is the captcha one, you are out of luck. " +
@@ -69,16 +84,19 @@ public class AntiAntiBotCloudFlare {
         }
     }
 
-    private void requiredDelay() throws AntiAntibotException {
+    private void requiredDelay(long beginMillis) throws AntiAntibotException {
         try {
-            Thread.sleep(REQUIRED_DELAY);
+            for (long currentTimeMillis = System.currentTimeMillis(); currentTimeMillis - beginMillis < REQUIRED_DELAY;) {
+                Thread.sleep(REQUIRED_DELAY - (currentTimeMillis - beginMillis) + 100);
+                currentTimeMillis = System.currentTimeMillis();
+            }
         }
         catch (InterruptedException e) {
             throw new AntiAntibotException(e);
         }
     }
 
-    private String getSubmitUrl(String baseUrl) {
+    private String buildSubmitUrl(String baseUrl) {
         return baseUrl + "cdn-cgi/l/chk_jschl";
     }
 }
