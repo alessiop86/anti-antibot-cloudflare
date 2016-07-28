@@ -1,6 +1,6 @@
 UNFINISHED! WORK IN PROGRESS! NOT COMPLETE! NOT WORKING! 
 
-I need some help, I need some website with the anti bot protection (I'm under attack mode) activated, so I can implement the rest of the code (I believe that most of the work it has already been done). Please open an issue or send me a private message :)
+**I need some help, I need some website with the CloudFlare anti bot protection (I'm under attack mode) activated, so I can implement the rest of the library (I believe that most of the work it has already been done). Please open an issue or send me a private message :)**
 
 
 
