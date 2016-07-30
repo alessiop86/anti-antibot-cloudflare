@@ -1,5 +1,9 @@
 package com.github.alessiop86.antiantibotcloudflare.http.adapters;
 
+import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
+
+import java.util.Map;
+
 public class BaseHttpClientAdapter {
 
 
@@ -19,5 +23,14 @@ public class BaseHttpClientAdapter {
 
     private boolean expectedHttpStatusCode(int httpStatusCode) {
         return httpStatusCode == HTTP_STATUS_CODE_CHALLENGE;
+    }
+
+    //TODO delete
+    public String toCurlHeaders(HttpRequest request) {
+        String return_ = "";
+        for (Map.Entry<String,String> header : request.getHeaders().entrySet()) {
+            return_+=  String.format(" --header \"%s: %s\" ",header.getKey(), header.getValue());
+        }
+        return return_;
     }
 }

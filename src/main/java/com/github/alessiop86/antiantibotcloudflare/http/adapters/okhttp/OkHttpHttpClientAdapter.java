@@ -11,6 +11,7 @@ import okhttp3.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 
 public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements HttpClientAdapter {
@@ -33,8 +34,17 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
 
             Request.Builder requestBuilder = new Request.Builder();
             addHeaders(requestBuilder,requestAbstraction.getHeaders());
-
-            requestBuilder.url(httpUrlBuilder.build());
+            HttpUrl httpUrl = httpUrlBuilder.build();
+            requestBuilder.url(httpUrl);
+//MOVE THE GOAL POST
+            System.out.println("curl -L -v " +
+                    httpUrl +
+                    toCurlHeaders(requestAbstraction) +
+                    getCookieCurlParam(httpUrl)
+            );
+            if (requestAbstraction.getParams().size() > 0)
+                throw new RuntimeException();
+//WE CAN DO BETTER
             Call call = okHttpClient.newCall(requestBuilder.build());
             Response response = call.execute();
             return buildHttpResponseBean(response);
@@ -44,9 +54,22 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
         }
     }
 
+    private String getCookieCurlParam(HttpUrl httpUrl) {
+        List<Cookie> cookies = okHttpClient.cookieJar().loadForRequest(httpUrl);
+        if (cookies.size() == 0) {
+            return "";
+        }
+        if (cookies.size() == 1) {
+            return String.format(" --header \"Cookie: %s\"", cookies.get(0));
+        }
+        throw new RuntimeException("wtf");
+    }
+
+
     private OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
                 .cookieJar(new CookieJarImpl())
+
 //                .followRedirects(true)
 //                .followSslRedirects(true)
                 .build();
