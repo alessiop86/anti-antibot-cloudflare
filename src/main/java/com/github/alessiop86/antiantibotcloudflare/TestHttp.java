@@ -1,17 +1,13 @@
 package com.github.alessiop86.antiantibotcloudflare;
 
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.OkHttpHttpClientAdapter;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import java.io.IOException;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.okhttp.OkHttpHttpClientAdapter;
 
 public class TestHttp {
 
-    final static String site = "https://www.pokevision.com";
+    static  String site = "https://wuxiaworld.com";
 
     public static void main(String[] args) throws Exception {
+        site = "http://localhost/input2.txt";
         AntiAntiBotCloudFlare main = new AntiAntiBotCloudFlare(new OkHttpHttpClientAdapter());
         String output = main.getUrl(site);
         System.out.println(output);

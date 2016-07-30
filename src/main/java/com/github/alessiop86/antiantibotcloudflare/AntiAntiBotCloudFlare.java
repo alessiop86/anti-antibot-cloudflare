@@ -2,15 +2,17 @@ package com.github.alessiop86.antiantibotcloudflare;
 
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
 import com.github.alessiop86.antiantibotcloudflare.exceptions.ParseException;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.OkHttpHttpClientAdapter;
+import com.github.alessiop86.antiantibotcloudflare.http.UserAgents;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.okhttp.OkHttpHttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
+import com.github.alessiop86.antiantibotcloudflare.util.UrlUtils;
 
 public class AntiAntiBotCloudFlare {
 
-    private static final int REQUIRED_DELAY = 000;//TODO 5000
+    private static final int REQUIRED_DELAY = 5000;//TODO 5000
 
     private final HttpClientAdapter httpClient;
     private final ChallengeSolver challengeSolver;
@@ -36,7 +38,8 @@ public class AntiAntiBotCloudFlare {
     public String getUrl(String url) throws AntiAntibotException {
         try {
             HttpResponse firstReturnedPage = httpClient.getUrl(url);
-            if (!firstReturnedPage.isChallenge()) {
+            //if (!firstReturnedPage.isChallenge()) {
+            if (false) { //TODO testing purposes with python SimpleHTTPServer returning not 503
                 return firstReturnedPage.getContent();
             } else {
                 return proceedWithAntiAntibot(firstReturnedPage);
@@ -51,9 +54,10 @@ public class AntiAntiBotCloudFlare {
         ParsedProtectionResponse parsedResponse = parseResponse(firstReturnedPage.getContent());
         Integer challengeResult = challengeSolver.solve(parsedResponse.getJsChallenge(), firstReturnedPage);
         String requestUrl = firstReturnedPage.getRequestUrl();
-        String submitUrl = buildSubmitUrl(requestUrl);
+        String submitUrl = UrlUtils.getSubmitUrl(requestUrl);
         HttpRequest request = HttpRequest.Builder.withUrl(submitUrl)
                 .addHeader("Referer",requestUrl)
+                .addHeader("User-Agent", UserAgents.getRandom())
                 .addParam(Parser.INPUT_FIELD_1,parsedResponse.getField1())
                 .addParam(Parser.INPUT_FIELD_2,parsedResponse.getField2())
                 .addParam("jschl_answer", "" + challengeResult)

@@ -18,7 +18,9 @@ public interface HttpClientAdapter {
 
     /**
      * Executes a more articulated HTTP request based on the params
-     * defined inside the HttpRequest parameter
+     * defined inside the HttpRequest parameter.
+     *
+     * This is supposed to store cookies between one call and the following one.
      *
      * @param request bean containing the parameters for the HTTP request
      * @return HttpResponse with the requested content
