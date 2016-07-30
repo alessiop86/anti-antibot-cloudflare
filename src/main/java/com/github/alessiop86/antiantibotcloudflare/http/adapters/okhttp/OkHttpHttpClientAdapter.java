@@ -5,19 +5,18 @@ import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.UserAgents;
 import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
-import okhttp3.*;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class OkHttpHttpClientAdapter implements HttpClientAdapter {
 
-    private static final String USER_AGENT_HEADER = "User-Agent";
     private static final String SERVER_HEADER = "Server";
     private static final String SERVER_HEADER_CHALLENGE_VALUE = "cloudflare-nginx";
     private static final int HTTP_STATUS_CODE_CHALLENGE = 503;
@@ -31,7 +30,6 @@ public class OkHttpHttpClientAdapter implements HttpClientAdapter {
 
     public HttpResponse getUrl(String url) throws HttpException {
         HttpRequest request = HttpRequest.Builder.withUrl(url)
-                .addHeader(USER_AGENT_HEADER, UserAgents.getRandom())
                 .build();
         return executeRequest(request);
     }
@@ -64,7 +62,7 @@ public class OkHttpHttpClientAdapter implements HttpClientAdapter {
         return url.newBuilder();
     }
 
-    private void addParams(HttpUrl.Builder builder, HashMap<String, String> params) throws UnsupportedEncodingException {
+    private void addParams(HttpUrl.Builder builder, Map<String, String> params) throws UnsupportedEncodingException {
         for (Map.Entry<String,String> param : params.entrySet()) {
             //HTTP DECODE REQUIRED FOR GET ONLY
             builder.addEncodedQueryParameter(param.getKey(), URLEncoder.encode(param.getValue(),"UTF-8"));
@@ -72,7 +70,7 @@ public class OkHttpHttpClientAdapter implements HttpClientAdapter {
         }
     }
 
-    private void addHeaders(Request.Builder builder, HashMap<String, String> headers) {
+    private void addHeaders(Request.Builder builder, Map<String, String> headers) {
         for (Map.Entry<String,String> header : headers.entrySet()) {
             builder.addHeader(header.getKey(), header.getValue());
         }

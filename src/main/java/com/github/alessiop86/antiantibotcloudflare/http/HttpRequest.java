@@ -1,12 +1,15 @@
 package com.github.alessiop86.antiantibotcloudflare.http;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class HttpRequest {
 
+    private static final String USER_AGENT_HEADER = "User-Agent";
+
     private final String url;
-    private final HashMap<String,String> headers;
-    private final HashMap<String,String> params;
+    private final Map<String,String> headers;
+    private final Map<String,String> params;
 
     private HttpRequest(String url, HashMap<String, String> headers, HashMap<String, String> params) {
         this.url = url;
@@ -24,6 +27,11 @@ public class HttpRequest {
         private HashMap<String,String> params = new HashMap<String,String>();
 
         private Builder() {
+            //DEFAULT HEADERS
+            headers.put("Connection","keep-alive");
+            headers.put("Accept","*/*");
+            headers.put("Accept-Encoding","gzip, deflate");
+            headers.put(USER_AGENT_HEADER, UserAgents.getRandom());
         }
 
         public static Builder withUrl(String url) {
@@ -59,7 +67,7 @@ public class HttpRequest {
      * Getter for the request headers
      * @return headers inside an HashMap<String,String> format
      */
-    public HashMap<String, String> getHeaders() {
+    public Map<String, String> getHeaders() {
         return headers;
     }
 
@@ -67,7 +75,7 @@ public class HttpRequest {
      * Getter for the request parameters
      * @return request parameters inside an HashMap<String,String> format
      */
-    public HashMap<String, String> getParams() {
+    public Map<String, String> getParams() {
         return params;
     }
 }
