@@ -2,6 +2,7 @@ package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclie
 
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.BaseHttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -16,12 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-public class ApacheHttpClientHttpClientAdapter implements HttpClientAdapter {
-
-    private static final String USER_AGENT_HEADER = "User-Agent";
-    private static final String SERVER_HEADER = "Server";
-    private static final String SERVER_HEADER_CHALLENGE_VALUE = "cloudflare-nginx";
-    private static final int HTTP_STATUS_CODE_CHALLENGE = 503;
+public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter implements HttpClientAdapter {
 
     private final CloseableHttpClient httpclient;
 
@@ -41,12 +37,14 @@ public class ApacheHttpClientHttpClientAdapter implements HttpClientAdapter {
         try {
             setHeaders(request, httpGet);
             CloseableHttpResponse response = httpclient.execute(httpGet);
-            return new HttpResponse(isChallenge(response), EntityUtils.toString(response.getEntity()),
-                    request.getUrl());
-
+            return new HttpResponse(isChallenge(response), extractContentBody(response), request.getUrl());
         } catch (IOException e) {
             throw new HttpException(e);
         }
+    }
+
+    private String extractContentBody(CloseableHttpResponse response) throws IOException {
+        return EntityUtils.toString(response.getEntity());
     }
 
     private URI buildUri(HttpRequest request) throws HttpException {
@@ -64,7 +62,6 @@ public class ApacheHttpClientHttpClientAdapter implements HttpClientAdapter {
         }
     }
 
-
     private void setHeaders(HttpRequest request, HttpGet httpGet) {
         for (Map.Entry<String,String> header : request.getHeaders().entrySet()) {
             httpGet.addHeader(header.getKey(),header.getValue());
@@ -72,16 +69,15 @@ public class ApacheHttpClientHttpClientAdapter implements HttpClientAdapter {
     }
 
     private boolean isChallenge(CloseableHttpResponse response) {
-        return expectedServerHeader(response.getFirstHeader(SERVER_HEADER).getValue())
-                && expectedHttpStatusCode(response.getStatusLine().getStatusCode());
+        return isChallenge(getServerHeader(response), getStatusCode(response));
     }
 
-
-    private boolean expectedServerHeader(String serverHeader) {
-        return (serverHeader != null && serverHeader.equals(SERVER_HEADER_CHALLENGE_VALUE));
+    private int getStatusCode(CloseableHttpResponse response) {
+        return response.getStatusLine().getStatusCode();
     }
 
-    private boolean expectedHttpStatusCode(int httpStatusCode) {
-        return httpStatusCode == HTTP_STATUS_CODE_CHALLENGE;
+    private String getServerHeader(CloseableHttpResponse response) {
+        return response.getFirstHeader(SERVER_HEADER).getValue();
     }
+
 }

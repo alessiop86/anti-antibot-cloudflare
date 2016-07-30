@@ -7,7 +7,7 @@ cookieHeader = None
 class MyHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
         self.cookieHeader = self.headers.get('Cookie')
-	    print self.headers
+        print self.headers
         SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
 
