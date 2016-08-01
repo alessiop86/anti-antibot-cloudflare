@@ -37,10 +37,11 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
             HttpUrl httpUrl = httpUrlBuilder.build();
             requestBuilder.url(httpUrl);
 //MOVE THE GOAL POST
-            System.out.println("curl -L -v " +
-                    httpUrl +
-                    toCurlHeaders(requestAbstraction) +
+            System.out.println(String.format("curl -v \"%s\" %s %s",
+                    httpUrl ,
+                    toCurlHeaders(requestAbstraction) ,
                     getCookieCurlParam(httpUrl)
+                )
             );
             if (requestAbstraction.getParams().size() > 0)
                 throw new RuntimeException();
@@ -60,7 +61,7 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
             return "";
         }
         if (cookies.size() == 1) {
-            return String.format(" --header \"Cookie: %s\"", cookies.get(0));
+            return String.format(" --cookie \"%s=%s\"", cookies.get(0).name(),cookies.get(0).value());
         }
         throw new RuntimeException("wtf");
     }
@@ -97,7 +98,12 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
     }
 
     private HttpResponse buildHttpResponseBean(Response response) throws IOException {
+
+        String urlFromResponse = response.request().url().toString();
+        if (urlFromResponse.equals("https://wuxiaworld.com/"))
+            urlFromResponse = "https://wuxiaworld.com";
+
         return new HttpResponse(isChallenge(response), response.body().string(),
-                response.request().url().toString());
+                urlFromResponse);
     }
 }
