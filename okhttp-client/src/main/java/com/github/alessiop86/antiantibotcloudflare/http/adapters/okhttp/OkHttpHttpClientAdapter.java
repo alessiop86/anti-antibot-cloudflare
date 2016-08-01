@@ -16,8 +16,10 @@ import java.util.Map;
 public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements HttpClientAdapter {
 
     private OkHttpClient okHttpClient;
+    private CookieJarImpl cookieJar;
 
     public OkHttpHttpClientAdapter() {
+        cookieJar = new CookieJarImpl();
         okHttpClient = getOkHttpClient();
     }
 
@@ -37,6 +39,16 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
             requestBuilder.url(httpUrlBuilder.build());
             Call call = okHttpClient.newCall(requestBuilder.build());
             Response response = call.execute();
+            System.out.println(response.headers());
+
+            String location = response.header("Location");
+            String cookie = response.header("Set-Cookie").split(";")[0];
+            System.out.println(
+                    String.format("curl \"%s\" --cookie \"%s\" --header \"Accept: */*\"  --header \"Connection: keep-alive\"  --header \"Accept-Encoding: gzip, deflate\"  -A \"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\" ",
+                    location,cookie
+                    )
+            );
+
             return buildHttpResponseBean(response);
         }
         catch(IOException e) {
@@ -46,8 +58,8 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
 
     private OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
-                .cookieJar(new CookieJarImpl())
-//                .followRedirects(true)
+                .cookieJar(cookieJar)
+                .followRedirects(false)
 //                .followSslRedirects(true)
                 .build();
     }
@@ -78,6 +90,9 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
         String urlFromResponse = response.request().url().toString();
         if (urlFromResponse.equals("https://wuxiaworld.com/"))
             urlFromResponse = "https://wuxiaworld.com";
+
+        if (urlFromResponse.equals("https://www.wuxiaworld.com/"))
+            urlFromResponse = "https://www.wuxiaworld.com";
         //TODO TEMPFIX
         return new HttpResponse(isChallenge(response), response.body().string(),
                 urlFromResponse);

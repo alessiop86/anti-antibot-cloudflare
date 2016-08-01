@@ -14,7 +14,25 @@ public class CookieJarImpl implements CookieJar {
 
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        cookieStore.put(url.host(), cookies);
+
+        //TODO TEMPORARY IMPL
+        List<Cookie> cookiesForUrl = cookieStore.get(url.host());
+        if (cookiesForUrl != null) {
+            cookiesForUrl = new ArrayList<Cookie>(cookiesForUrl); //unmodifiable
+            cookiesForUrl.addAll(cookies);
+            cookieStore.put(url.host(), cookiesForUrl);
+        }
+        else {
+            cookieStore.put(url.host(), cookies);
+        }
+
+
+
+
+        //OLD IMPL
+        //cookieStore.put(url.host(), cookies);
+
+
     }
 
     @Override
@@ -22,5 +40,7 @@ public class CookieJarImpl implements CookieJar {
         List<Cookie> cookies = cookieStore.get(url.host());
         return cookies != null ? cookies : new ArrayList<Cookie>();
     }
+
+
 
 }
