@@ -7,6 +7,7 @@ import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapt
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -20,9 +21,11 @@ import java.util.Map;
 public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter implements HttpClientAdapter {
 
     private final CloseableHttpClient httpclient;
+    private final HttpClientContext httpClientContext;
 
     public ApacheHttpClientHttpClientAdapter() {
         httpclient = HttpClients.createDefault();
+        httpClientContext = HttpClientContext.create();
     }
 
     @Override
@@ -36,7 +39,7 @@ public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter imp
         HttpGet httpGet = new HttpGet(uri);
         try {
             setHeaders(request, httpGet);
-            CloseableHttpResponse response = httpclient.execute(httpGet);
+            CloseableHttpResponse response = httpclient.execute(httpGet, httpClientContext);
             return new HttpResponse(isChallenge(response), extractContentBody(response), request.getUrl());
         } catch (IOException e) {
             throw new HttpException(e);

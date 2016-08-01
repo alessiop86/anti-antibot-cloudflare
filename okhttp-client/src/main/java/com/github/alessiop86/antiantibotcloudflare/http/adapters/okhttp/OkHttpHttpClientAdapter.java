@@ -74,7 +74,12 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
     }
 
     private HttpResponse buildHttpResponseBean(Response response) throws IOException {
+        //TODO TEMPFIX
+        String urlFromResponse = response.request().url().toString();
+        if (urlFromResponse.equals("https://wuxiaworld.com/"))
+            urlFromResponse = "https://wuxiaworld.com";
+        //TODO TEMPFIX
         return new HttpResponse(isChallenge(response), response.body().string(),
-                response.request().url().toString());
+                urlFromResponse);
     }
 }
