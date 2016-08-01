@@ -6,7 +6,6 @@ import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.UserAgents;
 import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.okhttp.OkHttpHttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import com.github.alessiop86.antiantibotcloudflare.util.UrlUtils;
 
@@ -25,15 +24,6 @@ public class AntiAntiBotCloudFlare {
         this.httpClient = httpClient;
         challengeSolver = new ChallengeSolver(new JavascriptEngine(isAndroid));
     }
-
-    public static AntiAntiBotCloudFlare createAntiAntiBotCloudFlareWithDefaultConfig() {
-        return new AntiAntiBotCloudFlare(new OkHttpHttpClientAdapter());
-    }
-
-    public static AntiAntiBotCloudFlare createAntiAntiBotCloudFlareWithDefaultAndroidConfig() {
-        return new AntiAntiBotCloudFlare(new OkHttpHttpClientAdapter(), true);
-    }
-
 
     public String getUrl(String url) throws AntiAntibotException {
         try {
