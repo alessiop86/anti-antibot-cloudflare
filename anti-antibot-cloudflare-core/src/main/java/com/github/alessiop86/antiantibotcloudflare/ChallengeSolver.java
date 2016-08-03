@@ -15,7 +15,6 @@ public class ChallengeSolver {
     public Integer solve(String challenge, HttpResponse firstReturnedPage) throws AntiAntibotException {
         Integer jsChallengeResult = javascriptEngine.solveJavascript(challenge);
         String domain = UrlUtils.extractDomainName(firstReturnedPage.getRequestUrl());
-        System.out.println(String.format("challenge=%s, domain=%s, length=%s", jsChallengeResult,domain, domain.length()));
         return jsChallengeResult + domain.length();
     }
 

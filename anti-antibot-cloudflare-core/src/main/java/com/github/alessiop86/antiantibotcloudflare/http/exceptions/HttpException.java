@@ -9,4 +9,8 @@ public class HttpException extends Exception {
     public HttpException(String msg, Exception e) {
         super(msg,e);
     }
+
+    public HttpException(String msg) {
+        super(msg);
+    }
 }

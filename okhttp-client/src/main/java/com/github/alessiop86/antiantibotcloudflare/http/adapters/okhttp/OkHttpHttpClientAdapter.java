@@ -35,19 +35,10 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
 
             Request.Builder requestBuilder = new Request.Builder();
             addHeaders(requestBuilder,requestAbstraction.getHeaders());
-
             requestBuilder.url(httpUrlBuilder.build());
+
             Call call = okHttpClient.newCall(requestBuilder.build());
             Response response = call.execute();
-            System.out.println(response.headers());
-
-            String location = response.header("Location");
-            String cookie = response.header("Set-Cookie").split(";")[0];
-            System.out.println(
-                    String.format("curl \"%s\" --cookie \"%s\" --header \"Accept: */*\"  --header \"Connection: keep-alive\"  --header \"Accept-Encoding: gzip, deflate\"  -A \"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\" ",
-                    location,cookie
-                    )
-            );
 
             return buildHttpResponseBean(response);
         }
@@ -59,8 +50,6 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
     private OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
-                .followRedirects(false)
-//                .followSslRedirects(true)
                 .build();
     }
 

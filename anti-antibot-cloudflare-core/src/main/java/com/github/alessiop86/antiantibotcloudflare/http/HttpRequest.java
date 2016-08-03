@@ -17,21 +17,25 @@ public class HttpRequest {
         this.params = params;
     }
 
+    public static HashMap<String,String> getDefaultHeaders() {
+        HashMap<String,String> headers = new HashMap<String,String>();
+        headers.put("Connection","keep-alive");
+        headers.put("Accept","*/*");
+        //headers.put("Accept-Encoding","gzip, deflate");
+        headers.put(USER_AGENT_HEADER, UserAgents.getRandom());
+        return headers;
+    }
+
     /**
      * Builder used to construct the HttpRequest
      */
     public static class Builder {
 
         private String url;
-        private HashMap<String,String> headers = new HashMap<String,String>();
+        private HashMap<String,String> headers = getDefaultHeaders();
         private HashMap<String,String> params = new HashMap<String,String>();
 
         private Builder() {
-            //DEFAULT HEADERS
-            headers.put("Connection","keep-alive");
-            headers.put("Accept","*/*");
-            headers.put("Accept-Encoding","gzip, deflate");
-            headers.put(USER_AGENT_HEADER, UserAgents.getRandom());
         }
 
         public static Builder withUrl(String url) {

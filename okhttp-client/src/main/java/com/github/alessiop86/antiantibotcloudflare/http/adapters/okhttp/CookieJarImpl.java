@@ -12,35 +12,35 @@ public class CookieJarImpl implements CookieJar {
 
     private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
+    //TODO handle cookie overwriting (now cookie is just duplicated)
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-
-        //TODO TEMPORARY IMPL
-        List<Cookie> cookiesForUrl = cookieStore.get(url.host());
+        String host = getHost(url);
+        List<Cookie> cookiesForUrl = cookieStore.get(host);
         if (cookiesForUrl != null) {
             cookiesForUrl = new ArrayList<Cookie>(cookiesForUrl); //unmodifiable
             cookiesForUrl.addAll(cookies);
-            cookieStore.put(url.host(), cookiesForUrl);
+            cookieStore.put(host, cookiesForUrl);
         }
         else {
-            cookieStore.put(url.host(), cookies);
+            cookieStore.put(host, cookies);
         }
-
-
-
-
-        //OLD IMPL
-        //cookieStore.put(url.host(), cookies);
-
-
     }
 
     @Override
     public List<Cookie> loadForRequest(HttpUrl url) {
-        List<Cookie> cookies = cookieStore.get(url.host());
+        String host = getHost(url);
+        List<Cookie> cookies = cookieStore.get(host);
         return cookies != null ? cookies : new ArrayList<Cookie>();
     }
 
+    private String getHost(HttpUrl url) {
+        String host = url.host();
+        if (host.startsWith("www.")) {
+            host = host.substring(4);
+        }
+        return host;
+    }
 
 
 }
