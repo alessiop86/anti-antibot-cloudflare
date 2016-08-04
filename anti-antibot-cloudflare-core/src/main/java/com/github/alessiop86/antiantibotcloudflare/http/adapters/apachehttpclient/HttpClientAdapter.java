@@ -1,4 +1,4 @@
-package com.github.alessiop86.antiantibotcloudflare.http.adapters;
+package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient;
 
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;

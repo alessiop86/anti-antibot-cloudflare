@@ -2,8 +2,6 @@ package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclie
 
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.BaseHttpClientAdapter;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;

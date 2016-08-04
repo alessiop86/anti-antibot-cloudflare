@@ -1,4 +1,4 @@
-package com.github.alessiop86.antiantibotcloudflare.http.adapters.okhttp;
+package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.okhttp;
 
 import okhttp3.Cookie;
 import okhttp3.CookieJar;

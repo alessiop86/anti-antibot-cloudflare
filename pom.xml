@@ -12,22 +12,8 @@
     <modules>
         <module>anti-antibot-cloudflare-core</module>
         <module>apache-http-client</module>
+        <module>okhttp-client</module>
     </modules>
-
-    <!--<build>-->
-        <!--<pluginManagement>-->
-            <!--<plugins>-->
-                <!--<plugin>-->
-                    <!--<groupId>org.apache.maven.plugins</groupId>-->
-                    <!--<artifactId>maven-compiler-plugin</artifactId>-->
-                    <!--<configuration>-->
-                        <!--<source>1.7</source>-->
-                        <!--<target>1.7</target>-->
-                    <!--</configuration>-->
-                <!--</plugin>-->
-            <!--</plugins>-->
-        <!--</pluginManagement>-->
-    <!--</build>-->
 
     <build>
     <plugins>
@@ -44,9 +30,6 @@
     </build>
 
     <dependencies>
-
-
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

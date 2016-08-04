@@ -1,4 +1,4 @@
-package com.github.alessiop86.antiantibotcloudflare.http.adapters;
+package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient;
 
 public class BaseHttpClientAdapter {
 

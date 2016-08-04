@@ -1,10 +1,9 @@
-package com.github.alessiop86.antiantibotcloudflare.http.adapters.okhttp;
+package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.okhttp;
 
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
-import com.github.alessiop86.antiantibotcloudflare.http.UserAgents;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.BaseHttpClientAdapter;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.BaseHttpClientAdapter;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.HttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import okhttp3.*;
 
@@ -75,14 +74,7 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
     }
 
     private HttpResponse buildHttpResponseBean(Response response) throws IOException {
-        //TODO TEMPFIX
         String urlFromResponse = response.request().url().toString();
-        if (urlFromResponse.equals("https://wuxiaworld.com/"))
-            urlFromResponse = "https://wuxiaworld.com";
-
-        if (urlFromResponse.equals("https://www.wuxiaworld.com/"))
-            urlFromResponse = "https://www.wuxiaworld.com";
-        //TODO TEMPFIX
         return new HttpResponse(isChallenge(response), response.body().string(),
                 urlFromResponse);
     }

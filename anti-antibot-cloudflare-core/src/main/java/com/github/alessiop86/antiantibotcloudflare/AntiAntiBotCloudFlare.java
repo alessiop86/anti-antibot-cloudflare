@@ -5,13 +5,13 @@ import com.github.alessiop86.antiantibotcloudflare.exceptions.ParseException;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.UserAgents;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.HttpClientAdapter;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.HttpClientAdapter;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import com.github.alessiop86.antiantibotcloudflare.util.UrlUtils;
 
 public class AntiAntiBotCloudFlare {
 
-    private static final int REQUIRED_DELAY = 5000;//TODO 5000
+    private static final int REQUIRED_DELAY = 5000;
 
     private final HttpClientAdapter httpClient;
     private final ChallengeSolver challengeSolver;
@@ -28,8 +28,7 @@ public class AntiAntiBotCloudFlare {
     public String getUrl(String url) throws AntiAntibotException {
         try {
             HttpResponse firstReturnedPage = httpClient.getUrl(url);
-            //if (!firstReturnedPage.isChallenge()) {
-            if (false) { //TODO testing purposes with python SimpleHTTPServer returning not 503
+            if (!firstReturnedPage.isChallenge()) {
                 return firstReturnedPage.getContent();
             } else {
                 return proceedWithAntiAntibot(firstReturnedPage);
@@ -88,9 +87,5 @@ public class AntiAntiBotCloudFlare {
         catch (InterruptedException e) {
             throw new AntiAntibotException(e);
         }
-    }
-
-    private String buildSubmitUrl(String baseUrl) {
-        return baseUrl + "cdn-cgi/l/chk_jschl";
     }
 }
