@@ -1,7 +1,6 @@
 package com.github.alessiop86.antiantibotcloudflare;
 
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
-import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.HttpClientAdapter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ public abstract class AbstractIntegrationTest {
 
     @Before
     public void setUp() {
-        antiantibot = new AntiAntiBotCloudFlare(getHttpClientAdapterUnderTest());
+        antiantibot = getAntiAntiBotCloudFlareFactory().createInstance();
     }
 
     @Test
@@ -36,6 +35,6 @@ public abstract class AbstractIntegrationTest {
         assertFalse(containsUnExpectedTextErrorMessage, containsUnexpectedText);
     }
 
-    protected  abstract HttpClientAdapter getHttpClientAdapterUnderTest();
+    protected abstract AntiAntiBotCloudFlareFactory getAntiAntiBotCloudFlareFactory();
 
 }

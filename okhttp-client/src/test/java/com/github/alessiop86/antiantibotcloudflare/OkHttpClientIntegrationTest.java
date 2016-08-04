@@ -6,7 +6,7 @@ import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclien
 public class OkHttpClientIntegrationTest extends  AbstractIntegrationTest {
 
     @Override
-    protected HttpClientAdapter getHttpClientAdapterUnderTest() {
-        return new OkHttpHttpClientAdapter();
+    protected AntiAntiBotCloudFlareFactory getAntiAntiBotCloudFlareFactory() {
+        return new OkHttpAntiAntibotCloudFlareFactory();
     }
 }
