@@ -50,8 +50,8 @@ public class AntiAntiBotCloudFlare {
         HttpRequest request = HttpRequest.Builder.withUrl(submitUrl)
                 .addHeader("Referer",requestUrl)
                 .addHeader("User-Agent", UserAgents.getRandom())
-                .addParam(Parser.INPUT_FIELD_1,parsedResponse.getField1())
-                .addParam(Parser.INPUT_FIELD_2,parsedResponse.getField2())
+                .addParam(Parser.PASS_FIELD,parsedResponse.getPass1())
+                .addParam(Parser.JSCHL_VC_FIELD,parsedResponse.getJschl_vc())
                 .addParam("jschl_answer", "" + challengeResult)
                 .build();
         requiredDelay(beginMillis);

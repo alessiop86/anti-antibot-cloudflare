@@ -16,17 +16,17 @@ public class Parser {
     private static final String CHALLENGE_FORM_SELECTOR = "#challenge-form";
     private static final String NAME_ATTRIBUTE = "name";
     private static final String VALUE_ATTRIBUTE = "value";
-    public static final String INPUT_FIELD_1 = "pass";
-    public static final String INPUT_FIELD_2 = "jschl_vc";
+    public static final String PASS_FIELD = "pass";
+    public static final String JSCHL_VC_FIELD = "jschl_vc";
 
     private final ParsedChallengePage parseResult;
 
-
     public Parser(String document) throws ParseException {
+
         try {
             Element form = findForm(document);
-            Elements elementsMatchingField1 = form.getElementsByAttributeValue(NAME_ATTRIBUTE, INPUT_FIELD_1);
-            Elements elementsMatchingField2 = form.getElementsByAttributeValue(NAME_ATTRIBUTE, INPUT_FIELD_2);
+            Elements elementsMatchingField1 = form.getElementsByAttributeValue(NAME_ATTRIBUTE, PASS_FIELD);
+            Elements elementsMatchingField2 = form.getElementsByAttributeValue(NAME_ATTRIBUTE, JSCHL_VC_FIELD);
             if (elementsMatchingField1.size() != 1 || elementsMatchingField2.size() != 1) {
                 throw new ParseException("The challenge form format has changed. New format:" + form.html());
             }
@@ -65,25 +65,27 @@ public class Parser {
         return parseResult;
     }
 
+
+
     public class ParsedChallengePage {
 
-        private final String field1;
-        private final String field2;
+        private final String pass1;
+        private final String jschl_vc;
         private final String jsChallenge;
 
 
-        public ParsedChallengePage(String field1, String field2, String jsChallenge) {
+        public ParsedChallengePage(String pass1, String jschl_vc, String jsChallenge) {
             this.jsChallenge = jsChallenge;
-            this.field1 = field1;
-            this.field2 = field2;
+            this.pass1 = pass1;
+            this.jschl_vc = jschl_vc;
         }
 
-        public String getField1() {
-            return field1;
+        public String getPass1() {
+            return pass1;
         }
 
-        public String getField2() {
-            return field2;
+        public String getJschl_vc() {
+            return jschl_vc;
         }
 
         public String getJsChallenge() {
