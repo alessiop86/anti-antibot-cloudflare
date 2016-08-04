@@ -4,8 +4,10 @@ import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 
+import java.io.Closeable;
 
-public interface HttpClientAdapter {
+
+public interface HttpClientAdapter extends AutoCloseable {
 
     /**
      * Executes an HTTP GET requests to the desired url

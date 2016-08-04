@@ -22,11 +22,17 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
         okHttpClient = getOkHttpClient();
     }
 
+    @Override
+    public void close() throws Exception {
+    }
+
+    @Override
     public HttpResponse getUrl(String url) throws HttpException {
         HttpRequest request = HttpRequest.Builder.withUrl(url).build();
         return executeRequest(request);
     }
 
+    @Override
     public HttpResponse executeRequest(HttpRequest requestAbstraction) throws HttpException {
         try {
             HttpUrl.Builder httpUrlBuilder = getHttpUrlBuilder(requestAbstraction);
@@ -78,4 +84,6 @@ public class OkHttpHttpClientAdapter extends BaseHttpClientAdapter implements Ht
         return new HttpResponse(isChallenge(response), response.body().string(),
                 urlFromResponse);
     }
+
+
 }

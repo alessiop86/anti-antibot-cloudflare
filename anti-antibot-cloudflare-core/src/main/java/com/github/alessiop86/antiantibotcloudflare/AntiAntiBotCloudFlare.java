@@ -12,7 +12,7 @@ import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclien
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import com.github.alessiop86.antiantibotcloudflare.util.UrlUtils;
 
-public class AntiAntiBotCloudFlare {
+public class AntiAntiBotCloudFlare implements AutoCloseable {
 
     private static final int REQUIRED_DELAY = 5000;
 
@@ -90,5 +90,10 @@ public class AntiAntiBotCloudFlare {
         catch (InterruptedException e) {
             throw new AntiAntibotException(e);
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        httpClient.close();
     }
 }

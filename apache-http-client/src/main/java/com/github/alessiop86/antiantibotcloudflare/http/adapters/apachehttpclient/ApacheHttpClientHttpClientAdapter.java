@@ -27,6 +27,11 @@ public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter imp
     }
 
     @Override
+    public void close() throws Exception {
+        httpclient.close();
+    }
+
+    @Override
     public HttpResponse getUrl(String url) throws HttpException {
         return executeRequest(HttpRequest.Builder.withUrl(url).build());
     }
@@ -80,5 +85,6 @@ public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter imp
     private String getServerHeader(CloseableHttpResponse response) {
         return response.getFirstHeader(SERVER_HEADER).getValue();
     }
+
 
 }
