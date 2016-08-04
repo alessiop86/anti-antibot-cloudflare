@@ -1,4 +1,4 @@
-package com.github.alessiop86.antiantibotcloudflare;
+package com.github.alessiop86.antiantibotcloudflare.challenge;
 
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;

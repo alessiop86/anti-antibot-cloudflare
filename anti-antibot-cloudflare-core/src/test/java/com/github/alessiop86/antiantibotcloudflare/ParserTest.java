@@ -1,5 +1,6 @@
 package com.github.alessiop86.antiantibotcloudflare;
 
+import com.github.alessiop86.antiantibotcloudflare.challenge.Parser;
 import com.github.alessiop86.antiantibotcloudflare.exceptions.ParseException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;

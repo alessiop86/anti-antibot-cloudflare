@@ -1,4 +1,4 @@
-package com.github.alessiop86.antiantibotcloudflare;
+package com.github.alessiop86.antiantibotcloudflare.challenge;
 
 import com.github.alessiop86.antiantibotcloudflare.exceptions.ParseException;
 import org.jsoup.Jsoup;
@@ -19,7 +19,7 @@ public class Parser {
     public static final String INPUT_FIELD_1 = "pass";
     public static final String INPUT_FIELD_2 = "jschl_vc";
 
-    private final ParsedProtectionResponse parseResult;
+    private final ParsedChallengePage parseResult;
 
 
     public Parser(String document) throws ParseException {
@@ -35,7 +35,7 @@ public class Parser {
             String field2 = elementsMatchingField2.attr(VALUE_ATTRIBUTE);
             String jsChallenge = extractJsChallenge(document);
 
-            parseResult = new ParsedProtectionResponse(field1,field2,jsChallenge);
+            parseResult = new ParsedChallengePage(field1,field2,jsChallenge);
         }
         catch(ParseException e) {
             throw e;
@@ -61,7 +61,34 @@ public class Parser {
         return forms.get(0);
     }
 
-    public ParsedProtectionResponse getParsedProtectionResponse() {
+    public ParsedChallengePage getParsedProtectionResponse() {
         return parseResult;
     }
+
+    public class ParsedChallengePage {
+
+        private final String field1;
+        private final String field2;
+        private final String jsChallenge;
+
+
+        public ParsedChallengePage(String field1, String field2, String jsChallenge) {
+            this.jsChallenge = jsChallenge;
+            this.field1 = field1;
+            this.field2 = field2;
+        }
+
+        public String getField1() {
+            return field1;
+        }
+
+        public String getField2() {
+            return field2;
+        }
+
+        public String getJsChallenge() {
+            return jsChallenge;
+        }
+    }
+
 }

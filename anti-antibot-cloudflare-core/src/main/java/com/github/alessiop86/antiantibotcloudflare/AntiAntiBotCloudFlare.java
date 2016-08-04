@@ -1,5 +1,8 @@
 package com.github.alessiop86.antiantibotcloudflare;
 
+import com.github.alessiop86.antiantibotcloudflare.challenge.ChallengeSolver;
+import com.github.alessiop86.antiantibotcloudflare.challenge.JavascriptEngine;
+import com.github.alessiop86.antiantibotcloudflare.challenge.Parser;
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
 import com.github.alessiop86.antiantibotcloudflare.exceptions.ParseException;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
@@ -40,7 +43,7 @@ public class AntiAntiBotCloudFlare {
 
     private String proceedWithAntiAntibot(HttpResponse firstReturnedPage) throws AntiAntibotException {
         long beginMillis = System.currentTimeMillis();
-        ParsedProtectionResponse parsedResponse = parseResponse(firstReturnedPage.getContent());
+        Parser.ParsedChallengePage parsedResponse = parseResponse(firstReturnedPage.getContent());
         Integer challengeResult = challengeSolver.solve(parsedResponse.getJsChallenge(), firstReturnedPage);
         String requestUrl = firstReturnedPage.getRequestUrl();
         String submitUrl = UrlUtils.getSubmitUrl(requestUrl);
@@ -65,7 +68,7 @@ public class AntiAntiBotCloudFlare {
     }
 
 
-    private ParsedProtectionResponse parseResponse(String httpResponseBody) throws AntiAntibotException {
+    private Parser.ParsedChallengePage parseResponse(String httpResponseBody) throws AntiAntibotException {
         try {
             Parser parser = new Parser(httpResponseBody);
             return parser.getParsedProtectionResponse();

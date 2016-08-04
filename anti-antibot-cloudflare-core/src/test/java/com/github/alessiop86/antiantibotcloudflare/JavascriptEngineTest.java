@@ -1,5 +1,6 @@
 package com.github.alessiop86.antiantibotcloudflare;
 
+import com.github.alessiop86.antiantibotcloudflare.challenge.JavascriptEngine;
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
 import org.junit.Test;
 
