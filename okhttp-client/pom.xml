@@ -27,7 +27,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.alessiop86</groupId>
+            <groupId>com.github.alessiop86.anti-antibot-cloudflare</groupId>
             <artifactId>anti-antibot-cloudflare-core</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
