@@ -4,7 +4,7 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.alessiop86</groupId>
+    <groupId>com.github.alessiop86.anti-antibot-cloudflare</groupId>
     <artifactId>anti-antibot-cloudflare-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
