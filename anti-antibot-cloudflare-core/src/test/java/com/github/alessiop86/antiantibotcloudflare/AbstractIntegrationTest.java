@@ -1,6 +1,7 @@
 package com.github.alessiop86.antiantibotcloudflare;
 
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,6 +34,11 @@ public abstract class AbstractIntegrationTest {
         boolean containsUnexpectedText = content.contains(UNEXPECTED_PORTION);
         String containsUnExpectedTextErrorMessage = String.format("The content contain '%s'.\nContent=", UNEXPECTED_PORTION, content);
         assertFalse(containsUnExpectedTextErrorMessage, containsUnexpectedText);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        antiantibot.close();
     }
 
     protected abstract AntiAntiBotCloudFlareFactory getAntiAntiBotCloudFlareFactory();
