@@ -1,5 +1,6 @@
 package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient;
 
+import com.github.alessiop86.antiantibotcloudflare.http.ByteArrayHttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+
+import static com.github.alessiop86.antiantibotcloudflare.http.ByteArrayHttpResponse.buildChallengeHttpResponse;
 
 public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter implements HttpClientAdapter {
 
@@ -38,19 +41,42 @@ public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter imp
 
     @Override
     public HttpResponse executeRequest(HttpRequest request) throws HttpException {
-        URI uri = buildUri(request);
-        HttpGet httpGet = new HttpGet(uri);
         try {
-            setHeaders(request, httpGet);
-            CloseableHttpResponse response = httpclient.execute(httpGet, httpClientContext);
+            CloseableHttpResponse response = getApacheHttpResponse(request);
             return new HttpResponse(isChallenge(response), extractContentBody(response), request.getUrl());
         } catch (IOException e) {
             throw new HttpException(e);
         }
     }
 
+    @Override
+    public ByteArrayHttpResponse executeByteArrayRequest(HttpRequest request) throws HttpException {
+        try {
+            CloseableHttpResponse response = getApacheHttpResponse(request);
+            if (isChallenge(response)) {
+                return buildChallengeHttpResponse(extractContentBody(response), request.getUrl());
+            }
+            else {
+                return new ByteArrayHttpResponse(extractByteArrayContentBody(response), request.getUrl());
+            }
+        } catch (IOException e) {
+            throw new HttpException(e);
+        }
+    }
+
+    private CloseableHttpResponse getApacheHttpResponse(HttpRequest request) throws HttpException, IOException {
+        URI uri = buildUri(request);
+        HttpGet httpGet = new HttpGet(uri);
+        setHeaders(request, httpGet);
+        return httpclient.execute(httpGet, httpClientContext);
+    }
+
     private String extractContentBody(CloseableHttpResponse response) throws IOException {
         return EntityUtils.toString(response.getEntity());
+    }
+
+    private byte[] extractByteArrayContentBody(CloseableHttpResponse response) throws IOException {
+        return EntityUtils.toByteArray(response.getEntity());
     }
 
     private URI buildUri(HttpRequest request) throws HttpException {

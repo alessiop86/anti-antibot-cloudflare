@@ -21,7 +21,6 @@ public class HttpRequest {
         HashMap<String,String> headers = new HashMap<String,String>();
         headers.put("Connection","keep-alive");
         headers.put("Accept","*/*");
-        //headers.put("Accept-Encoding","gzip, deflate");
         headers.put(USER_AGENT_HEADER, UserAgents.getRandom());
         return headers;
     }
