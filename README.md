@@ -21,7 +21,7 @@ and add this to your  `pom.xml` `<dependencies>` block:
 ```
 <dependency>
   <artifactId>anti-antibot-cloudflare-apachehttpclient</artifactId>
-  <groupId>com.github.alessiop86</groupId>
+  <groupId>com.github.alessiop86.anti-antibot-cloudflare</groupId>
   <version>1.0</version>
 </dependency>
 ``` 
@@ -46,7 +46,7 @@ allprojects {
 and add this dependency:
 ```
 dependencies {
-	compile 'com.github.alessiop86:anti-antibot-cloudflare-okhttpclient:1.0'
+	compile 'compile 'com.github.alessiop86.anti-antibot-cloudflare:anti-antibot-cloudflare-okhttpclient:1.0''
 }
 ```
 
