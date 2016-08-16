@@ -2,7 +2,6 @@ package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclie
 
 public class BaseHttpClientAdapter {
 
-
     private static final String SERVER_HEADER_CHALLENGE_VALUE = "cloudflare-nginx";
     private static final int HTTP_STATUS_CODE_CHALLENGE = 503;
 

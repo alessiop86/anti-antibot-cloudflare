@@ -3,6 +3,8 @@ package com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclie
 import com.github.alessiop86.antiantibotcloudflare.http.ByteArrayHttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.internals.ApacheHttpByteArrayClient;
+import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.internals.ApacheHttpTextClient;
 import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,7 +21,7 @@ import java.util.Map;
 
 import static com.github.alessiop86.antiantibotcloudflare.http.ByteArrayHttpResponse.buildChallengeHttpResponse;
 
-public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter implements HttpClientAdapter {
+public class ApacheHttpClientHttpClientAdapter implements HttpClientAdapter {
 
     private final CloseableHttpClient httpclient;
     private final HttpClientContext httpClientContext;
@@ -41,76 +43,12 @@ public class ApacheHttpClientHttpClientAdapter extends BaseHttpClientAdapter imp
 
     @Override
     public HttpResponse executeRequest(HttpRequest request) throws HttpException {
-        try {
-            CloseableHttpResponse response = getApacheHttpResponse(request);
-            return new HttpResponse(isChallenge(response), extractContentBody(response), request.getUrl());
-        } catch (IOException e) {
-            throw new HttpException(e);
-        }
+       return new ApacheHttpTextClient(httpClientContext, httpclient).executeRequest(request);
     }
 
     @Override
     public ByteArrayHttpResponse executeByteArrayRequest(HttpRequest request) throws HttpException {
-        try {
-            CloseableHttpResponse response = getApacheHttpResponse(request);
-            if (isChallenge(response)) {
-                return buildChallengeHttpResponse(extractContentBody(response), request.getUrl());
-            }
-            else {
-                return new ByteArrayHttpResponse(extractByteArrayContentBody(response), request.getUrl());
-            }
-        } catch (IOException e) {
-            throw new HttpException(e);
-        }
+        return new ApacheHttpByteArrayClient(httpClientContext, httpclient).executeByteArrayRequest(request);
     }
-
-    private CloseableHttpResponse getApacheHttpResponse(HttpRequest request) throws HttpException, IOException {
-        URI uri = buildUri(request);
-        HttpGet httpGet = new HttpGet(uri);
-        setHeaders(request, httpGet);
-        return httpclient.execute(httpGet, httpClientContext);
-    }
-
-    private String extractContentBody(CloseableHttpResponse response) throws IOException {
-        return EntityUtils.toString(response.getEntity());
-    }
-
-    private byte[] extractByteArrayContentBody(CloseableHttpResponse response) throws IOException {
-        return EntityUtils.toByteArray(response.getEntity());
-    }
-
-    private URI buildUri(HttpRequest request) throws HttpException {
-        URIBuilder uriBuilder = null;
-        try {
-            uriBuilder = new URIBuilder(request.getUrl());
-            if (request.getParams().size() > 0) {
-                for (Map.Entry<String, String> param : request.getParams().entrySet()) {
-                    uriBuilder.addParameter(param.getKey(), param.getValue());
-                }
-            }
-            return uriBuilder.build();
-        } catch (URISyntaxException e) {
-            throw new HttpException("Invalid URI",e);
-        }
-    }
-
-    private void setHeaders(HttpRequest request, HttpGet httpGet) {
-        for (Map.Entry<String,String> header : request.getHeaders().entrySet()) {
-            httpGet.addHeader(header.getKey(),header.getValue());
-        }
-    }
-
-    private boolean isChallenge(CloseableHttpResponse response) {
-        return isChallenge(getServerHeader(response), getStatusCode(response));
-    }
-
-    private int getStatusCode(CloseableHttpResponse response) {
-        return response.getStatusLine().getStatusCode();
-    }
-
-    private String getServerHeader(CloseableHttpResponse response) {
-        return response.getFirstHeader(SERVER_HEADER).getValue();
-    }
-
 
 }
