@@ -1,4 +1,4 @@
-package com.github.alessiop86.antiantibotcloudflare.core;
+package com.github.alessiop86.antiantibotcloudflare.internals;
 
 import com.github.alessiop86.antiantibotcloudflare.challenge.ChallengeSolver;
 import com.github.alessiop86.antiantibotcloudflare.challenge.Parser;
@@ -8,20 +8,39 @@ import com.github.alessiop86.antiantibotcloudflare.http.HttpRequest;
 import com.github.alessiop86.antiantibotcloudflare.http.HttpResponse;
 import com.github.alessiop86.antiantibotcloudflare.http.UserAgents;
 import com.github.alessiop86.antiantibotcloudflare.http.adapters.apachehttpclient.HttpClientAdapter;
+import com.github.alessiop86.antiantibotcloudflare.http.exceptions.HttpException;
 import com.github.alessiop86.antiantibotcloudflare.util.UrlUtils;
 
-public abstract class BaseAntiAntibotCore {
+public class HttpRequestsManager {
 
     private static final int REQUIRED_DELAY = 5000;
     private final ChallengeSolver challengeSolver;
-    protected final HttpClientAdapter httpClient;
+    private final HttpClientAdapter httpClient;
 
-    public BaseAntiAntibotCore(ChallengeSolver challengeSolver, HttpClientAdapter httpClient) {
+    public HttpRequestsManager(HttpClientAdapter httpClient, ChallengeSolver challengeSolver) {
         this.challengeSolver = challengeSolver;
         this.httpClient = httpClient;
     }
 
-    protected HttpRequest prepareSecondRequest(HttpResponse firstReturnedPage) throws AntiAntibotException {
+    public byte[] getByteArray(HttpResponse firstReturnedPage) throws AntiAntibotException {
+        try {
+            HttpRequest request = prepareSecondRequest(firstReturnedPage);
+            return httpClient.executeByteArrayRequest(request).getByteArrayContent();
+        } catch (HttpException e) {
+            throw new AntiAntibotException("Error executing the second Http call", e);
+        }
+    }
+
+    public String getString(HttpResponse firstReturnedPage) throws AntiAntibotException {
+        try {
+            HttpRequest request = prepareSecondRequest(firstReturnedPage);
+            return httpClient.executeRequest(request).getContent();
+        } catch (HttpException e) {
+            throw new AntiAntibotException("Error executing the second Http call", e);
+        }
+    }
+
+    private HttpRequest prepareSecondRequest(HttpResponse firstReturnedPage) throws AntiAntibotException {
         long beginMillis = System.currentTimeMillis();
         Parser.ParsedChallengePage parsedResponse = parseResponse(firstReturnedPage.getContent());
         Integer challengeResult = challengeSolver.solve(parsedResponse.getJsChallenge(), firstReturnedPage);

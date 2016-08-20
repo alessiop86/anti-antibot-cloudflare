@@ -6,21 +6,22 @@ import org.mozilla.javascript.Scriptable;
 
 public class JavascriptEngine {
 
-    private final boolean android;
+    public enum IsAndroid { ANDROID, NOT_ANDROID }
 
-    public JavascriptEngine(boolean android) {
-        this.android = android;
+    private final IsAndroid isAndroid;
+
+    public JavascriptEngine(IsAndroid isAndroid) {
+        this.isAndroid = isAndroid;
     }
 
     public Integer solveJavascript(String javascriptSource) throws AntiAntibotException {
-
         Context rhino = Context.enter();
-        if (android) {
+        if (isAndroid()) {
             makeAndroidCompatible(rhino);
         }
         try {
             Scriptable scope = rhino.initStandardObjects();
-            Object javascriptResult = rhino.evaluateString(scope,javascriptSource,"challenge",0,null);
+            Object javascriptResult = rhino.evaluateString(scope, javascriptSource,"challenge", 0, null);
             return (int) Float.parseFloat(javascriptResult.toString());
         }
         catch(Exception e) {
@@ -29,6 +30,10 @@ public class JavascriptEngine {
         finally {
             Context.exit();
         }
+    }
+
+    private boolean isAndroid() {
+        return isAndroid == IsAndroid.ANDROID;
     }
 
     private void makeAndroidCompatible(Context rhino) {

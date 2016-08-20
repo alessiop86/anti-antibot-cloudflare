@@ -1,5 +1,6 @@
 package com.github.alessiop86.antiantibotcloudflare;
 
+import com.github.alessiop86.antiantibotcloudflare.challenge.JavascriptEngine.IsAndroid;
 import com.github.alessiop86.antiantibotcloudflare.challenge.JavascriptEngine;
 import com.github.alessiop86.antiantibotcloudflare.exceptions.AntiAntibotException;
 import org.junit.Test;
@@ -9,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class JavascriptEngineTest {
 
     //boolean JavascriptEngine param does not influence the result, is just for performance & compatibility
-    private JavascriptEngine engine = new JavascriptEngine(true);
+    private JavascriptEngine engine = new JavascriptEngine(IsAndroid.ANDROID);
 
     @Test
     public void easyTest() throws AntiAntibotException {

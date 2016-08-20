@@ -6,6 +6,6 @@ public class ApacheHttpAntiAntibotCloudFlareFactory implements AntiAntiBotCloudF
 
     @Override
     public AntiAntiBotCloudFlare createInstance() {
-        return new AntiAntiBotCloudFlare(new ApacheHttpClientHttpClientAdapter());
+        return new AntiAntiBotCloudFlareImpl(new ApacheHttpClientHttpClientAdapter());
     }
 }

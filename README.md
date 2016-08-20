@@ -22,7 +22,7 @@ and add this to your  `pom.xml` `<dependencies>` block:
 <dependency>
   <artifactId>anti-antibot-cloudflare-apachehttpclient</artifactId>
   <groupId>com.github.alessiop86.anti-antibot-cloudflare</groupId>
-  <version>1.0</version>
+  <version>1.2</version>
 </dependency>
 ``` 
     
@@ -31,6 +31,15 @@ Then feel free to use the library like this (using a try-with-resources block co
 AntiAntiBotCloudFlare scraper = new ApacheHttpAntiAntibotCloudFlareFactory().createInstance();
 String html = scraper.getUrl(possiblyProtectedUrl);
 scraper.close();
+```
+
+If you need to get an image or another non-textual content, use the `getByteArrayFromUrl` method: 
+```
+byte[] bytes = antiAntiBotCloudFlare.getByteArrayFromUrl(imageUrl);
+//example: writing the image whose content is contained in bytes to localPath:
+InputStream input = new ByteArrayInputStream(bytes);
+OutputStream output = new FileOutputStream(localPath);
+IOUtils.copy(input, output);
 ```
 
 ###Library with OkHttpClient (Android)
@@ -46,7 +55,7 @@ allprojects {
 and add this dependency:
 ```
 dependencies {
-	compile 'compile 'com.github.alessiop86.anti-antibot-cloudflare:anti-antibot-cloudflare-okhttpclient:1.0''
+	compile 'compile 'com.github.alessiop86.anti-antibot-cloudflare:anti-antibot-cloudflare-okhttpclient:1.2''
 }
 ```
 
@@ -57,4 +66,8 @@ String html = antibot.getUrl(possiblyProtectedUrl);
 antibot.close(); //not really necessary in this case, since it does nothing
 ```
 
-
+Again, If you need to get an image or another non-textual content, use the `getByteArrayFromUrl` method:  
+```
+byte[] bytes = antiAntiBotCloudFlare.getByteArrayFromUrl(imageUrl);
+//the image content is now stored inside the byte array.
+```
