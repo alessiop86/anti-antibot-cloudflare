@@ -1,3 +1,12 @@
+# This project has been discontinued
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+
 The project started as a Java 7 porting of https://github.com/Anorov/cloudflare-scrape, a python module to bypass Cloudflare's anti-bot page (also known as "I'm Under Attack Mode", or IUAM). 
 
 The project allows you to programmatically get the content of a website, whether it is protected by IUAM mode or not. 
